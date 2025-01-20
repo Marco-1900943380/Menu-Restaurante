@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menú del Restaurante</title>
+    <script src="https://cdn.jsdelivr.net/npm/qr-code-styling/lib/index.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+        h1 {
+            text-align: center;
+            color: #d35400;
+        }
+        .menu-item {
+            margin: 20px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .menu-item img {
+            width: 50px;
+            height: 50px;
+            border-radius: 5px;
+        }
+        .menu-item label {
+            font-weight: bold;
+            flex: 1;
+        }
+        button {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: #d35400;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #e67e22;
+        }
+        #qr-code {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        input[type="text"], input[type="number"] {
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 60px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Menú del Restaurante</h1>
+        
+        <div class="menu-item">
+            <label for="mesa">Número de mesa:</label>
+            <input type="text" id="mesa" placeholder="Tu mesa">
+        </div>
+
+        <div id="menu">
+            <div class="menu-item">
+                <img src="https://via.placeholder.com/50" alt="Pizza Margherita">
+                <label>Pizza Margherita - S/20.00</label>
+                <input type="number" id="pizza" min="0" placeholder="Cantidad">
+            </div>
+            <div class="menu-item">
+                <img src="https://via.placeholder.com/50" alt="Hamburguesa">
+                <label>Hamburguesa - S/15.00</label>
+                <input type="number" id="hamburguesa" min="0" placeholder="Cantidad">
+            </div>
+            <div class="menu-item">
+                <img src="https://via.placeholder.com/50" alt="Bebida">
+                <label>Bebida - S/5.00</label>
+                <input type="number" id="bebida" min="0" placeholder="Cantidad">
+            </div>
+        </div>
+
+        <button onclick="generarPedido()">Enviar Pedido</button>
+
+        <h2 style="text-align:center;">Escanea el Código QR</h2>
+        <div id="qr-code"></div>
+    </div>
+
+    <script>
+        // Generar código QR
+        const qrCode = new QRCodeStyling({
+            width: 200,
+            height: 200,
+            data: window.location.href,
+        });
+
+        qrCode.append(document.getElementById("qr-code"));
+
+        function generarPedido() {
+            const mesa = document.getElementById('mesa').value;
+            const pizza = document.getElementById('pizza').value || 0;
+            const hamburguesa = document.getElementById('hamburguesa').value || 0;
+            const bebida = document.getElementById('bebida').value || 0;
+
+            if (!mesa) {
+                alert("Por favor, ingresa el número de mesa.");
+                return;
+            }
+
+            const pedido = [];
+            if (pizza > 0) pedido.push(`Pizza Margherita x${pizza}`);
+            if (hamburguesa > 0) pedido.push(`Hamburguesa x${hamburguesa}`);
+            if (bebida > 0) pedido.push(`Bebida x${bebida}`);
+
+            if (pedido.length === 0) {
+                alert("Por favor, selecciona al menos un producto.");
+                return;
+            }
+
+            const mensaje = `Hola, quiero realizar el siguiente pedido:\nMesa: ${mesa}\n${pedido.join("\n")}`;
+            const numeroWhatsApp = "593983798502"; // Cambia por tu número con código de país
+            const url = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(mensaje)}`;
+
+            window.open(url, '_blank');
+        }
+    </script>
+</body>
+</html>
